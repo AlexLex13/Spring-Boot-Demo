@@ -32,7 +32,12 @@ public class PersonDataAccessService implements PersonDao{
 
     @Override
     public Optional<Person> selectPersonById(UUID id) {
-        return Optional.empty();
+        final String sql = "SELECT id, name FROM person WHERE id = ?;";
+        Person person = jdbcTemplate.queryForObject(sql, new Object[]{id}, (resultSet, i) -> new Person(
+                UUID.fromString(resultSet.getString("id")),
+                resultSet.getString("name"))
+        );
+        return Optional.ofNullable(person);
     }
 
     @Override
